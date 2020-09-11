@@ -1,0 +1,72 @@
+##  Google Cloud Platform Fundamentals - Core Infrastructure: Getting Started with Compute Engine
+
+## Objectives:
+ In this lab, you will learn how to perform the following tasks:
+  1.Create a Compute Engine virtual machine using the Google Cloud Platform (GCP) Console.
+  2.Create a Compute Engine virtual machine using the gcloud command-line interface.
+  3.Connect between the two instances.
+  
+ -Create a virtual machine using GCP console:
+  1. create a vm instance with name my-vm-1, specify machine type, image and allow http traffic
+   ~ gcloud compute instances create my-vm-1 --machine-type=n1-standard-1 --image=debian-9-stretch-v20190213 --image-project=debian-cloud --subnet=default --tags=http
+   ~ gcloud compute firewall-rules create allow-http --direction=INGRESS --priority=1000 --action=ALLOW --rules=http:80 --target-tags=http --source-ranges=0.0.0.0/0
+ 
+ -Create a virtual machine using gcloud command line:
+  1. display a list of zones in your region
+   ~ gcloud compute zones list | grep us-central1
+   
+  2. choose a zone other than the one which is assgned to you and set as your default
+   ~ gcloud config set compute/zone us-central1-b
+   
+  3. create a vm instance called my-vm-2
+   ~ gcloud compute instances create my-vm-2 --machine-type=n1-standard-1 --image=debian-9-stretch-v20190213 --image-project=debian-cloud --subnet=default
+   
+ -Connect between virtual machine instances:
+  1. connect to my-vm-2 using SSH
+   ~ gcloud compute ssh my-vm-2
+   
+  2. ping my-vm-1 over the network
+   ~ ping my-vm-1
+   ~ctrl+c to end the ping
+   
+  3. use SSH to connect to my-vm-1
+   ~ ssh my-vm-1  
+   
+  4. install nginx webserver
+   ~ sudo apt-get isntall nginx-light -y
+   
+  5. use nano text editor to add custom image to the home page of the webserver
+   ~ sudo nano /var/www/html/index.nginx-debian.html
+   
+  6. use the arrow keys to move your cursor to the line just below the h1 header. add text and replace YOUR_NAME with your real name
+   ~ Hi from YOUR_NAME
+   
+  7. press "ctrl+o" and enter key to save edited file, press "ctrl+x: to exit nano text editor
+  
+  8. confirm the webserver is serving your new page
+   ~ curl http://localhost/
+   
+  9. exit from my-vm-1
+   ~exit
+   
+  10. confirm my-vm-2 can reach the webserver on my-vm-1
+   ~ curl http://my-vm-1/
+   
+  11. exit from my-vm-2
+   ~ exit
+   
+  12. copy the external IP address of my-vm-1, paste into the address bar of a new tab. you would see your webserver home page, including your custom text.
+   ~ gcloud compute instances list --zone=us-central1-a
+  
+Congratulations!
+In this lab, you created virtual machine (VM) instances in two different zones and connected to them using ping, ssh, and HTTP.
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
